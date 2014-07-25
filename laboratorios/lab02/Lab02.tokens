@@ -1,0 +1,9 @@
+WHITESPACE=1
+PLUS=4
+FLOAT=3
+INT=2
+MINUS=5
+NUMBER=6
+'float'=3
+'-'=5
+'+'=4
