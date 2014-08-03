@@ -24,11 +24,15 @@ lexer grammar Decaf;
 	}
 }
 
+//AUX
 fragment DIGIT		:   '0'..'9' ;
+fragment HEX 		:   ('A'|'a')|('B'|'b')|('C'|'c')|('D'|'d')|('E'|'e')|('F'|'f');
 fragment LETTER		:   ('a'..'z'|'A'..'Z');
 fragment SIGNO		:   '-'|'+';
+fragment ESC: '\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\'); 
 
-//signos 
+
+//Operadores
 ADD			:	'+'  {format(getLine(), "", getText());};
 SUB			: 	'-'  {format(getLine(), "", getText());};
 MULT		: 	'*'  {format(getLine(), "", getText());};
@@ -48,7 +52,24 @@ ASSIGN 		: 	'='  {format(getLine(), "", getText());};
 PLUSASSIGN 	: 	'+=' {format(getLine(), "", getText());};
 MINUSASSIGN :	'-=' {format(getLine(), "", getText());};
 
+//Signos
+COMA		:	 ',' {format(getLine(), "", getText());};
+SEMICOLON	:    ';' {format(getLine(), "", getText());};
+OPENAREN	:    '(' {format(getLine(), "", getText());};
+CLOSEPAREN	: 	 ')' {format(getLine(), "", getText());};
+OPENBRACKET	:  	 '[' {format(getLine(), "", getText());};
+CLOSEBRACKET: 	 ']' {format(getLine(), "", getText());};
+OPENBRACE : 	 '{' {format(getLine(), "", getText());};
+CLOSEBRACE 	: 	 '}' {format(getLine(), "", getText());};
 
+//LITERALES
+STRINGLITERAL: '"'(ESC|~('\''|'\\'|'"'))*'"' {format(getLine(), "STRINGLITERAL", getText());};
+CHARLIT	:'\''(ESC|~('\''|'\\'|'"'|'\n'|'\t'))'\'' {format(getLine(), "CHARLITERAL", getText());};
+BOOLEANLITERAL: ('true'|'false') {format(getLine(), "BOOLEANLITERAL", getText());};
+HEXLIT:		 '0'('x'|'X')(DIGIT|HEX)(DIGIT|HEX)* {format(getLine(), "HEXLIT", getText());};
+INTLITERAL: (DIGIT+|'0'('x'|'X')HEX+) {format(getLine(), "INTLITERAL", getText());};
+DECIMALIT:  (DIGIT)(DIGIT)*           {format(getLine(), "DECIMALIT", getText());};
 
-
+//SKIP
 ESPACIOS	: 	( '\t' | ' ' | '\r' | '\n')+ { skip(); } ;
+COMENT 	 	:   '//' (~('\n'|'\r'))* {skip();};
